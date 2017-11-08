@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+
+# List the top processes by number of open files descriptors.
+#
+# Useful if some process eats all your file descriptors.
+#
+# Example:
+# $ sudo lsof-offenders
+# nopen:2525  pid:250   name:socketfilterfw
+# nopen:328   pid:72373 name:Google Chrome
+# nopen:256   pid:87140 name:mysqld
+# nopen:223   pid:45374 name:Dropbox
+# ...
+
+import psutil
+from collections import namedtuple
+
+ProcessSummary = namedtuple("ProcessSummary", ["pid", "name", "num_fds", "obj"])
+
+try:
+    process_summaries = []
+    n_zombies = 0
+    n_disappeared = 0
+    for p in psutil.process_iter():
+        try:
+            process_summaries.append(ProcessSummary(
+                pid=p.pid,
+                name=p.name(),
+                num_fds=p.num_fds(),
+                obj=p,
+            ))
+        except psutil.ZombieProcess:
+            n_zombies += 1
+        except psutil.NoSuchProcess:
+            n_disappeared += 1
+    for psum in sorted(process_summaries, key=lambda psum: -psum.num_fds)[:20]:
+        print "nopen:{:<5} pid:{:<5} name:{}".format(psum.num_fds, psum.pid, psum.name)
+    if n_zombies > 0:
+        print "zombies: {}".format(n_zombies)
+    if n_disappeared > 0:
+        print "disappeared: {}".format(n_disappeared)
+except psutil.AccessDenied as ex:
+    print ex
+    print "sudo is required"
