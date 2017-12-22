@@ -7,6 +7,7 @@ Useful if some process eats all your file descriptors.
 Tested on macOS and Ubuntu.
 
 Example:
+
 ```
 $ sudo lsof-offenders
 nopen:2525  pid:250   name:socketfilterfw
@@ -18,4 +19,14 @@ nopen:223   pid:45374 name:Dropbox
 
 ## Setup
 
-This is a Python 2 program. Install the package `pip install psutil`. `lsof-offenders` must run as sudo, so make sure to install `psutil` for whatever version of python you will be running as root.
+This python program depends on the [psutil](https://github.com/giampaolo/psutil) package and must run with root privileges:
+
+```
+$ pip install psutil
+```
+
+Make it available systemwide by putting it in your binary executable path:
+
+```
+$ cp lsof-offenders /usr/local/bin/
+```
