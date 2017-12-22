@@ -34,11 +34,11 @@ try:
         except psutil.NoSuchProcess:
             n_disappeared += 1
     for psum in sorted(process_summaries, key=lambda psum: -psum.num_fds)[:20]:
-        print "nopen:{:<5} pid:{:<5} name:{}".format(psum.num_fds, psum.pid, psum.name)
+        print("nopen:{:<5} pid:{:<5} name:{}".format(psum.num_fds, psum.pid, psum.name))
     if n_zombies > 0:
-        print "zombies: {}".format(n_zombies)
+        print("zombies: {}".format(n_zombies))
     if n_disappeared > 0:
-        print "disappeared: {}".format(n_disappeared)
+        print("disappeared: {}".format(n_disappeared))
 except psutil.AccessDenied as ex:
-    print ex
-    print "sudo is required"
+    print(ex)
+    print("sudo is required")
