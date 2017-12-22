@@ -21,14 +21,17 @@ try:
     process_summaries = []
     n_zombies = 0
     n_disappeared = 0
+    n_total_fds = 0
     for p in psutil.process_iter():
         try:
-            process_summaries.append(ProcessSummary(
+            psum = ProcessSummary(
                 pid=p.pid,
                 name=p.name(),
                 num_fds=p.num_fds(),
                 obj=p,
-            ))
+            )
+            process_summaries.append(psum)
+            n_total_fds += psum.num_fds
         except psutil.ZombieProcess:
             n_zombies += 1
         except psutil.NoSuchProcess:
@@ -39,6 +42,7 @@ try:
         print("zombies: {}".format(n_zombies))
     if n_disappeared > 0:
         print("disappeared: {}".format(n_disappeared))
+    print("total fds: {}".format(n_total_fds))
 except psutil.AccessDenied as ex:
     print(ex)
     print("sudo is required")

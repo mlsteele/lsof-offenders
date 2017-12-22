@@ -15,6 +15,7 @@ nopen:328   pid:72373 name:Google Chrome
 nopen:256   pid:87140 name:mysqld
 nopen:223   pid:45374 name:Dropbox
 ...
+total fds: 8931
 ```
 
 ## Setup
